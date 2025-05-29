@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const router = express.Router();
 
@@ -13,10 +14,21 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all users
+// Get all users (with debug)
 router.get('/', async (req, res) => {
-  const users = await User.find();
-  res.send(users);
+  console.log('GET /api/users called');
+  try {
+    //log all collection names
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    console.log("Collections in DB:", collections.map(c => c.name));
+
+    const users = await User.find();
+    console.log(`Found ${users.length} users`);
+    res.send(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).send('Error fetching users');
+  }
 });
 
 // Get user by ID
@@ -26,3 +38,4 @@ router.get('/:id', async (req, res) => {
 });
 
 module.exports = router;
+
