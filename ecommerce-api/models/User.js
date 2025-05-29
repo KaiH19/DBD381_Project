@@ -11,5 +11,5 @@ const userSchema = new mongoose.Schema({
   paymentId: String
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema, 'Users');
 
